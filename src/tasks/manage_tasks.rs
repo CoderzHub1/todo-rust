@@ -1,14 +1,7 @@
-use crate::tasks::Task;
+use crate::tasks::tasks::Task;
+use std::error::Error;
+use std::fs::OpenOptions;
 
-pub fn add_task() {
-    println!("You accessed your tasks");
-    let new_task: Task = Task {
-        id: 1,
-        name: String::from("abcd"),
-        completed: false,
-    };
-    println!(
-        "id:{}\nname:{}\ncompleted:{}",
-        new_task.id, new_task.name, new_task.completed
-    );
+pub fn add_task(tasks: &mut Vec<Task>, new_task: Task) -> Result<(), Box<dyn Error>> {
+    let file = std::
 }
