@@ -1,23 +1,14 @@
 use crate::tasks::tasks::Task;
-use csv::Reader;
+use sled::{self, Db};
+use std;
 use std::error::Error;
-use std::fs::File;
 
-pub fn extract_tasks(filename: String) -> Result<Vec<Task>, Box<dyn Error>> {
-    let mut tasks: Vec<Task> = vec![];
-    let file_exists: bool = std::path::Path::new(filename.trim()).exists();
-    if file_exists {
-        let file = File::open(filename).expect("Cant find tasks.csv");
-        let mut rdr = Reader::from_reader(file);
-
-        for result in rdr.deserialize() {
-            match result {
-                Ok(task) => tasks.push(task),
-                Err(e) => eprintln!("Error reading record: {}", e),
-            }
-        }
-    } else {
-        eprintln!("File {} doesnt exist", filename)
+pub fn extract_tasks(db: &Db) -> Result<Vec<Task>, Box<dyn Error>> {
+    let mut tasks: Vec<Task> = Vec::new();
+    for item in db.iter() {
+        let (_, value) = item?;
+        let task: Task = bincode::deserialize(&value)?;
+        tasks.push(task);
     }
     Ok(tasks)
 }
