@@ -1,5 +1,3 @@
-use std::fmt::UpperHex;
-
 use todo::{
     prompts::prompts::prompts,
     tasks::{extract_tasks::{extract_tasks, update_task}, manage_tasks::add_task, tasks::Task},
@@ -55,6 +53,10 @@ loop {
 
       update_task(&mut my_tasks, &db, task_id, _status)?;
 
+    }
+
+    "refresh"=>{
+      my_tasks = extract_tasks(&db).expect("cant extract tasks from the sled db");
     }
 
     "exit" => {
