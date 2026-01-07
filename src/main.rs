@@ -2,6 +2,7 @@ use todo::{
     prompts::prompts::prompts,
     tasks::{extract_tasks::{extract_tasks, update_task}, manage_tasks::add_task, tasks::Task},
 };
+use owo_colors::OwoColorize;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
   // -------------------BASIC INITIALIZATION-----------------------------
@@ -30,7 +31,11 @@ loop {
 
     "list" => {
         for task in &my_tasks {
-          println!("{:#?}", task)
+          println!("");
+          println!("{}: {}", "ID".bright_red().bold(), task.id.to_string().bright_blue());
+          println!("{}: {}", "NAME".bright_red().bold(), task.name.to_string().green());
+          println!("{}: {}", "STATUS".bright_red().bold(), task.completed.to_string().green());
+          println!("");
         }
     }
 

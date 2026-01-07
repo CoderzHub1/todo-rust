@@ -19,7 +19,7 @@ use std::error::Error;
 ///
 /// # Examples
 ///
-/// ```ignore
+/// ```rust
 /// let tasks = extract_tasks(&db)?;
 /// for task in tasks {
 ///     println!("{:?}", task);
@@ -34,6 +34,7 @@ pub fn extract_tasks(db: &Db) -> Result<Vec<Task>, Box<dyn Error>> {
   }
   Ok(tasks)
 }
+
 
 /// Update the completion `status` of the task with `task_id` in both the
 /// provided in-memory `tasks_vec` and the sled `db`.
@@ -61,6 +62,18 @@ pub fn extract_tasks(db: &Db) -> Result<Vec<Task>, Box<dyn Error>> {
 ///   `task_id` is 0 or if the resulting index is out of bounds for `tasks_vec`.
 ///   Callers should ensure `tasks_vec` contains the task with the given `task_id`
 ///   or otherwise guard against out-of-bounds access.
+///
+/// # Examples
+///
+/// ```rust
+/// let mut my_tasks:Vec<Task> = vec![];
+/// let db = sled::open("database_name")?;
+/// let task_id:u32 = 1;
+/// let status = true;
+/// update_task(&mut my_tasks, &db, task_id, status)?;
+///
+/// ```
+
 pub fn update_task(tasks_vec:&mut Vec<Task>, db: &Db, task_id:u32, status:bool) -> Result<(), Box<dyn Error>>{
   let task_id_bytes = task_id.to_be_bytes();
   if let Some(val) = db.get(task_id_bytes)?{
